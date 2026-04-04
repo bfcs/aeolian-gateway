@@ -306,7 +306,7 @@ export async function executeUpstreamRequest({
 
         try {
             if (resText) {
-                const data = JSON.parse(resText);
+                let data = JSON.parse(resText);
                 promptTokens = data.usage?.prompt_tokens
                     || data.usageMetadata?.promptTokenCount
                     || 0;
@@ -316,7 +316,20 @@ export async function executeUpstreamRequest({
                 totalTokens = data.usage?.total_tokens
                     || data.usageMetadata?.totalTokenCount
                     || 0;
-                if (!res.ok) errorMessage = resText.substring(0, 500);
+
+                if (!res.ok) {
+                    // Normalize Gemini error format (Array of objects) to standard object
+                    if (Array.isArray(data) && data.length > 0 && data[0]?.error) {
+                        data = data[0];
+                        responseBody = JSON.stringify(data);
+                    }
+                    
+                    if (data?.error?.message) {
+                        errorMessage = String(data.error.message).substring(0, 500);
+                    } else {
+                        errorMessage = resText.substring(0, 500);
+                    }
+                }
 
                 // 对非流式 tool_calls 响应，将 extra_content 编码到 ID 中
                 if (res.ok && data.choices) {
