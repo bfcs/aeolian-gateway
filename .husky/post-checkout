@@ -1,0 +1,28 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# 获取主仓库路径
+MAIN_ROOT="/Users/xy/Repo/ai-gateway/main"
+
+# 获取当前工作目录
+CURRENT_WORKTREE=$(git rev-parse --show-toplevel 2>/dev/null)
+
+# 核心逻辑：如果当前不是主仓库，则建立链接
+if [ -n "$CURRENT_WORKTREE" ] && [ "$CURRENT_WORKTREE" != "$MAIN_ROOT" ]; then
+    
+    # 1. 链接 .dev.vars (文件)
+    SOURCE_VARS="$MAIN_ROOT/.dev.vars"
+    TARGET_VARS="$CURRENT_WORKTREE/.dev.vars"
+    if [ -f "$SOURCE_VARS" ] && [ ! -e "$TARGET_VARS" ]; then
+        echo "Husky 自动化：正在链接 .dev.vars -> $SOURCE_VARS"
+        ln -sf "$SOURCE_VARS" "$TARGET_VARS"
+    fi
+
+    # 2. 链接 .wrangler (目录)
+    SOURCE_WRANGLER="$MAIN_ROOT/.wrangler"
+    TARGET_WRANGLER="$CURRENT_WORKTREE/.wrangler"
+    if [ -d "$SOURCE_WRANGLER" ] && [ ! -e "$TARGET_WRANGLER" ]; then
+        echo "Husky 自动化：正在链接 .wrangler -> $SOURCE_WRANGLER"
+        ln -sf "$SOURCE_WRANGLER" "$TARGET_WRANGLER"
+    fi
+fi

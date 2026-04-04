@@ -1,0 +1,47 @@
+/**
+ * For more details on how to configure Wrangler, refer to:
+ * https://developers.cloudflare.com/workers/wrangler/configuration/
+ */
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "ai-gateway",
+	"main": ".open-next/worker.js",
+	"routes": [
+		{
+			"pattern": "your-gw.example.com",
+			"custom_domain": true
+		}
+	],
+	"compatibility_date": "2025-12-01",
+	"compatibility_flags": [
+		"nodejs_compat",
+		"global_fetch_strictly_public"
+	],
+	"build": {
+		"command": "npx @opennextjs/cloudflare build"
+	},
+	"assets": {
+		"binding": "ASSETS",
+		"directory": ".open-next/assets"
+	},
+	"images": {
+		"binding": "IMAGES"
+	},
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "ai-gateway-db",
+			"database_id": "YOUR_DATABASE_ID",
+			"preview_database_id": "DB"
+		}
+	],
+	"services": [
+		{
+			"binding": "WORKER_SELF_REFERENCE",
+			"service": "ai-gateway"
+		}
+	],
+	"observability": {
+		"enabled": false
+	}
+}
