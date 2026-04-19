@@ -374,9 +374,13 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ pat
                 transformedBody.model = selectedRule?.targetModel || requestedModel;
                 const isGeminiOpenAICompatible = isGeminiOpenAICompatibleBaseUrl(selectedProvider.baseUrl);
 
-                if (isGeminiOpenAICompatible && Object.prototype.hasOwnProperty.call(transformedBody, 'store')) {
-                    delete transformedBody.store;
-
+                if (isGeminiOpenAICompatible) {
+                    if (Object.prototype.hasOwnProperty.call(transformedBody, 'store')) {
+                        delete transformedBody.store;
+                    }
+                    if (Object.prototype.hasOwnProperty.call(transformedBody, 'frequency_penalty')) {
+                        delete transformedBody.frequency_penalty;
+                    }
                 }
                 
                 if (isGeminiOpenAICompatible && transformedBody.messages) {

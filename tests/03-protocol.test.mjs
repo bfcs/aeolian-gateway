@@ -55,6 +55,21 @@ describe('3. 协议修复与增强 (Protocol Fixes)', () => {
       assert.equal(data.dry_run, true);
       assert.equal(Object.prototype.hasOwnProperty.call(data.debug_payload || {}, 'store'), false, 'store 未被移除');
     });
+
+    it('Gemini OpenAI 兼容端点应移除 frequency_penalty 字段', async () => {
+      const model = requireConfig('GOOGLE_OPENAI_COMPATIBLE_MODEL_ID', config.GOOGLE_OPENAI_COMPATIBLE_MODEL_ID);
+      const res = await chatCompletion(model, [
+        { role: 'user', content: 'hello' },
+      ], {
+        headers: { 'x-dry-run': 'true' },
+        frequency_penalty: 0.5,
+      });
+
+      assert.equal(res.status, 200);
+      const data = await safeJson(res);
+      assert.equal(data.dry_run, true);
+      assert.equal(Object.prototype.hasOwnProperty.call(data.debug_payload || {}, 'frequency_penalty'), false, 'frequency_penalty 未被移除');
+    });
   });
 
   describe('3.2 思维过程提取', () => {
