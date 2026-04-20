@@ -155,3 +155,6 @@ pnpm run deploy
   - 清理 assistant 空 `content`
   - tool 文本结果包装为 JSON 字符串
 
+## 测试
+1. 查看 `tests/README.md`
+2. `.dev.vars.test.simple` 测试需要用到的环境变量模板
