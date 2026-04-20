@@ -1,5 +1,6 @@
 'use server';
 
+import crypto from "crypto";
 import { getProviders, addProvider, updateProvider, deleteProvider, ProviderConfig, getModelRules, ModelRule, addModelRule, updateModelRule, deleteModelRule } from "@/lib/server/providers";
 import { getConfig } from "@/lib/server/configs";
 import { revalidatePath } from "next/cache";
@@ -163,24 +164,40 @@ export async function fetchAvailableModelsWithProviders() {
 }
 
 export async function createProvider(provider: ProviderConfig) {
-    provider.id = crypto.randomUUID();
-    await addProvider(provider);
-    revalidatePath('/admin/providers');
-    revalidatePath('/admin/aliases');
-    return provider;
+    try {
+        provider.id = crypto.randomUUID();
+        await addProvider(provider);
+        revalidatePath('/admin/providers');
+        revalidatePath('/admin/aliases');
+        return { success: true, provider };
+    } catch (e: any) {
+        console.error("创建供应商失败:", e);
+        return { success: false, error: e.message };
+    }
 }
 
 export async function updateProviderAction(provider: ProviderConfig) {
-    await updateProvider(provider);
-    revalidatePath('/admin/providers');
-    revalidatePath('/admin/aliases');
-    return provider;
+    try {
+        await updateProvider(provider);
+        revalidatePath('/admin/providers');
+        revalidatePath('/admin/aliases');
+        return { success: true, provider };
+    } catch (e: any) {
+        console.error("更新供应商失败:", e);
+        return { success: false, error: e.message };
+    }
 }
 
 export async function deleteProviderAction(id: string) {
-    await deleteProvider(id);
-    revalidatePath('/admin/providers');
-    revalidatePath('/admin/aliases');
+    try {
+        await deleteProvider(id);
+        revalidatePath('/admin/providers');
+        revalidatePath('/admin/aliases');
+        return { success: true };
+    } catch (e: any) {
+        console.error("删除供应商失败:", e);
+        return { success: false, error: e.message };
+    }
 }
 
 export async function fetchRemoteModels(baseUrl: string, apiKey: string, type: 'openai' | 'google'): Promise<string[]> {

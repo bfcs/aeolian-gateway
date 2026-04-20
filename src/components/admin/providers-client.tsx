@@ -288,27 +288,50 @@ export default function ProvidersClient({ initialProviders, subscriptionUrl }: {
             keys
         };
         if (editingProvider) {
-            await updateProviderAction(config);
-            setProviders(prev => prev.map(p => p.id === config.id ? config : p));
+            const res = await updateProviderAction(config);
+            if (res.success) {
+                setProviders(prev => prev.map(p => p.id === config.id ? config : p));
+                toast.success("供应商已更新");
+                setIsModalOpen(false);
+            } else {
+                toast.error("更新失败: " + res.error);
+            }
         } else {
-            const newP = await createProvider(config);
-            setProviders([newP, ...providers]);
+            const res = await createProvider(config);
+            if (res.success && res.provider) {
+                setProviders([res.provider as ProviderConfig, ...providers]);
+                toast.success("供应商已创建");
+                setIsModalOpen(false);
+            } else {
+                toast.error("创建失败: " + res.error);
+            }
         }
-        setIsModalOpen(false);
     };
 
     const handleDelete = async (id: string) => {
         toast.confirm({
             message: '您确定吗？此模型供应商的所有路由规则也将被删除。',
             type: 'danger', confirmText: '删除',
-            onConfirm: async () => { await deleteProviderAction(id); setProviders(prev => prev.filter(p => p.id !== id)); }
+            onConfirm: async () => { 
+                const res = await deleteProviderAction(id); 
+                if (res.success) {
+                    setProviders(prev => prev.filter(p => p.id !== id)); 
+                    toast.success("供应商已删除");
+                } else {
+                    toast.error("删除失败: " + res.error);
+                }
+            }
         });
     };
 
     const handleToggleProvider = async (provider: ProviderConfig) => {
         const updated = { ...provider, isEnabled: !provider.isEnabled };
-        await updateProviderAction(updated);
-        setProviders(prev => prev.map(p => p.id === provider.id ? updated : p));
+        const res = await updateProviderAction(updated);
+        if (res.success) {
+            setProviders(prev => prev.map(p => p.id === provider.id ? updated : p));
+        } else {
+            toast.error("操作失败: " + res.error);
+        }
     };
 
     const filteredProvidersTotal = providers.filter(p => {

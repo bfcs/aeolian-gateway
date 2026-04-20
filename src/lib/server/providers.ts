@@ -1,4 +1,5 @@
 import { getCloudflareContext } from "@opennextjs/cloudflare";
+import crypto from "crypto";
 
 export interface ProviderKey {
     id?: string;
