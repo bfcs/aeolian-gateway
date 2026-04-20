@@ -37,7 +37,7 @@ token像流水一样到底花在哪里了？
 
 以下是项目的部分界面截图展示：
 
-<details>
+<details open>
 <summary>点击展开查看截图</summary>
 
 <br>
