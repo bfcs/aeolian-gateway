@@ -1,0 +1,15 @@
+ADMIN_PASSWORD=
+HOST=
+API_KEY=
+PROVIDERS_LINK=https://gist.githubusercontent.com/bfcs/2bfbee5d48e159ecfc502d3217e931c0/raw/91d3626de9b893ca1cb8885b343f5864f5e16369/providers.json
+GOOGLE_MODEL_ID=models/gemini-3-flash-preview
+GOOGLE_OPENAI_COMPATIBLE_MODEL_ID=models/gemini-3-flash-preview
+OPENAI_MODEL_ID=openrouter/free
+ANTHROPIC_MODEL_ID=doubao-1.5-pro-32k
+KEY_WEIGHTS_MODEL_ID=for-key-weights-test
+MODEL_ALIAS_MODEL_ID=for-model-alias-route-test
+DISABLED_MODEL_ID=diabled-model-id
+DISABLED_MODEL_ALIAS=for-test-disabled-model-alias
+DISABLED_GATEWAY_KEY=for-test-disabled-key
+DISABLED_ALIAS_TARGET_MODEL_ID=for-test-disabled-target-model-alias-route
+MULTI_TYPES_MODEL_ID=multi-types-model-id

@@ -51,6 +51,7 @@ wrangler.jsonc
 draft
 
 !.dev.vars.simple
+!.dev.vars.test.simple
 
 AGENTS.md
 CLAUDE.md
